@@ -27,26 +27,24 @@ function become_user_perm() {
 
 /**
  * Implements of hook_menu().
- */ 
+ */
 function become_user_menu() {
   $items = array();
-  
   $items['user/become-user/%'] = array(
     'page callback' => 'become_user_change',
     'page arguments' => array(2),
     'access arguments' => array('allow become another user'),
     'type' => MENU_CALLBACK,
   );
-  
   return $items;
 }
 
 /**
  * Implements of hook_form_alter().
- */ 
+ */
 function become_user_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'user_admin_account' && user_access('allow become another user')) {
-    foreach($form['name'] as $key=>$value) {
+    foreach ($form['name'] as $key => $value) {
       global $user;
       if ($key > 1 && $user->uid != $key) {
         $user_id = $key;
