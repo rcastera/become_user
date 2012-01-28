@@ -1,0 +1,5 @@
+; $Id$
+name = Become User
+description = "A module to easily login and become another user."
+package = "Other"
+core = 6.x

@@ -1,0 +1,72 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Allow a user with permissions to become another user.
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function become_user_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#become_user':
+      $output = t('<p>A simple module to allow a user to become another user.</p>
+                   <ol><li>Copy the become_user folder to the modules folder in your installation.</li>
+                   <li>Enable the module using Administer -> Site building -> Modules (/admin/build/modules).</li>
+                   <li>Go to /admin/user/user to become another user.</li></ol>');
+      return $output;
+  }
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function become_user_perm() {
+  return array('allow become another user');
+}
+
+/**
+ * Implementation of hook_menu().
+ */ 
+function become_user_menu() {	
+  $items = array();
+  
+  $items['user/become-user/%'] = array (
+    'page callback' => 'become_user_change',
+    'page arguments' => array(2),
+    'access arguments' => array('allow become another user'),
+    'type' => MENU_CALLBACK              
+  );
+  
+  return $items;
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */ 
+function become_user_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'user_admin_account' && user_access('allow become another user')) {
+    foreach($form['name'] as $key=>$value) {
+      global $user;
+      if ($key > 1 && $user->uid != $key) { // Not the admin and not current logged in user.
+        $user_id = $key;
+        $operation = $form['operations'][$user_id]['#value'];
+        $become_user = l(t('become user'), 'user/become-user/' . $user_id, array('attributes' => array('style' => 'margin: 0px 5px;')));
+        $form['operations'][$user_id]['#value'] = $operation . $become_user;  
+      }
+    }
+  }
+}
+
+/**
+ * Change the current user.
+ */
+function become_user_change($id) {
+  global $user;
+  watchdog('become_user', 'Session closed for %name.', array('%name' => $user->name));
+  $user = user_load($id);
+  watchdog('become_user', 'Session opened for %name.', array('%name' => $user->name));
+  drupal_goto('user/'. $user->uid);  
+}
