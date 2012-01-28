@@ -28,14 +28,14 @@ function become_user_perm() {
 /**
  * Implements of hook_menu().
  */ 
-function become_user_menu() {	
+function become_user_menu() {
   $items = array();
   
-  $items['user/become-user/%'] = array (
-    'page callback'=>'become_user_change',
-    'page arguments'=>array(2),
-    'access arguments'=>array('allow become another user'),
-    'type'=>MENU_CALLBACK              
+  $items['user/become-user/%'] = array(
+    'page callback' => 'become_user_change',
+    'page arguments' => array(2),
+    'access arguments' => array('allow become another user'),
+    'type' => MENU_CALLBACK,
   );
   
   return $items;
@@ -52,7 +52,7 @@ function become_user_form_alter(&$form, &$form_state, $form_id) {
         $user_id = $key;
         $operation = $form['operations'][$user_id]['#value'];
         $become_user = l(t('become user'), 'user/become-user/' . $user_id, array('attributes' => array('style' => 'margin: 0px 5px;')));
-        $form['operations'][$user_id]['#value'] = $operation . $become_user;  
+        $form['operations'][$user_id]['#value'] = $operation . $become_user;
       }
     }
   }
@@ -66,5 +66,5 @@ function become_user_change($id) {
   watchdog('become_user', 'Session closed for %name.', array('%name' => $user->name));
   $user = user_load($id);
   watchdog('become_user', 'Session opened for %name.', array('%name' => $user->name));
-  drupal_goto('user/' . $user->uid);  
+  drupal_goto('user/' . $user->uid);
 }
