@@ -10,10 +10,7 @@
 function become_user_help($path, $arg) {
   switch ($path) {
     case 'admin/help#become_user':
-      $output = t('<p>A simple module to allow a user to become another user.</p>
-                   <ol><li>Copy the become_user folder to the modules folder in your installation.</li>
-                   <li>Enable the module using Administer -> Site building -> Modules (/admin/build/modules).</li>
-                   <li>Go to /admin/user/user to become another user.</li></ol>');
+      $output = t('<p>A simple module to allow a user to become another user.</p>');
       return $output;
   }
 }
